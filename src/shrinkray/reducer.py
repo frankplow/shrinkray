@@ -39,6 +39,7 @@ from shrinkray.passes.patching import PatchApplier, Patches
 from shrinkray.passes.python import PYTHON_PASSES, is_python
 from shrinkray.passes.sat import SAT_PASSES, DimacsCNF
 from shrinkray.passes.sequences import block_deletion, delete_duplicates
+from shrinkray.passes.video import nalu_deletion
 from shrinkray.problem import ReductionProblem, shortlex
 
 S = TypeVar("S")
@@ -113,6 +114,7 @@ class ShrinkRay(Reducer[bytes]):
 
     initial_cuts: list[ReductionPass[bytes]] = attrs.Factory(
         lambda: [
+            nalu_deletion,
             cut_comment_like_things,
             hollow,
             compose(Split(b"\n"), delete_duplicates),
@@ -125,6 +127,7 @@ class ShrinkRay(Reducer[bytes]):
 
     great_passes: list[ReductionPass[bytes]] = attrs.Factory(
         lambda: [
+            nalu_deletion,
             compose(Split(b"\n"), delete_duplicates),
             compose(Split(b"\n"), block_deletion(1, 10)),
             compose(Split(b";"), block_deletion(1, 10)),
