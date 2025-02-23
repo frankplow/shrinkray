@@ -26,4 +26,5 @@ async def nalu_deletion(problem: ReductionProblem[bytes]) -> None:
     nalu_ends = nalu_starts[1:] + [len(problem.current_test_case)]
     nalus = zip(nalu_starts, nalu_ends)
     spans = [[nalu] for nalu in nalus]
+    spans.reverse()
     await apply_patches(problem, Cuts(), spans)
